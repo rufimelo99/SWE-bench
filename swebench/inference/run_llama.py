@@ -309,6 +309,7 @@ def generate(
                     stopping_criteria=stopping_criteria,
                     use_cache=False,
                 )
+                breakpoint()
                 total_len = output.shape[-1]
                 output = output[0].cpu()[input_ids.shape[-1] :]
                 new_len = len(output)
