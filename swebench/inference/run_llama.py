@@ -327,6 +327,7 @@ def generate(
                     "model_name_or_path": model_name_or_path,
                 }
                 print(json.dumps(res), file=fileobj, flush=True)
+                breakpoint()
             except Exception as e:
                 logger.exception(e)
                 print(f"failed on {ix} with {len(input_ids)} tokens")
@@ -334,6 +335,7 @@ def generate(
                 if fail_count >= 3:
                     raise ValueError("too many failures")
 
+            break
 
 def get_all_existing_ids(output_file):
     stub_pattern = re.compile(
