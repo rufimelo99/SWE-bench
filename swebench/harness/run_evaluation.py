@@ -314,7 +314,7 @@ def run_instances(
 
     # run instances in parallel
     payloads = []
-    for test_spec in test_specs[0:1]:
+    for test_spec in test_specs:
         payloads.append(
             (
                 test_spec,
