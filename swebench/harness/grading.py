@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from swebench.harness.constants import (
@@ -271,6 +272,9 @@ def get_eval_report(
     report = get_eval_tests_report(
         eval_status_map, eval_ref, eval_type=eval_type
     )
+    print(report)
+    logging.info("Evaluation report generated successfully.")
+    logging.info(f"Full evaluation report: {report}")
     if get_resolution_status(report) == ResolvedStatus.FULL.value:
         report_map[instance_id]["resolved"] = True
 

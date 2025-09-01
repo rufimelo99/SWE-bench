@@ -195,6 +195,8 @@ def run_instance(
         test_output, timed_out, total_runtime = exec_run_with_timeout(
             container, "/bin/bash /eval.sh", timeout
         )
+        logger.info(test_output)
+        
         test_output_path = log_dir / LOG_TEST_OUTPUT
         logger.info(f"Test runtime: {total_runtime:_.2f} seconds")
         with open(test_output_path, "w") as f:
