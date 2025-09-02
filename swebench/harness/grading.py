@@ -123,6 +123,7 @@ def get_eval_tests_report(
         else:
             success.append(test_case)
 
+    logging.info(f"eval_type: {eval_type}")
     check_test_case = (
         check_pass_and_fail if eval_type == EvalType.PASS_AND_FAIL else check_fail_only
     )
@@ -272,7 +273,6 @@ def get_eval_report(
     report = get_eval_tests_report(
         eval_status_map, eval_ref, eval_type=eval_type
     )
-    print(report)
     logging.info("Evaluation report generated successfully.")
     logging.info(f"Full evaluation report: {report}")
     if get_resolution_status(report) == ResolvedStatus.FULL.value:

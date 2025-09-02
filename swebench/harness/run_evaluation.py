@@ -100,12 +100,15 @@ def run_instance(
         test_output_path = log_dir / LOG_TEST_OUTPUT
         if not test_output_path.exists():
             raise ValueError(f"Test output file {test_output_path} does not exist")
+        import logging
+        logging.info(f"test spec: {test_spec}, prediction: {pred}, test_output_path: {test_output_path}")
         report = get_eval_report(
             test_spec=test_spec,
             prediction=pred,
             test_log_path=test_output_path,
             include_tests_status=True,
         )
+        logging.info(f"Generated report: {report}")
         # Write report to report.json
         with open(report_path, "w") as f:
             f.write(json.dumps(report, indent=4))
