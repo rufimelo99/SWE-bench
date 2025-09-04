@@ -209,6 +209,9 @@ def load_data(
             batched=False,
             desc="tokenizing",
         )
+    # filter for instance_ids
+    if instance_ids is not None:
+        dataset = dataset.filter(lambda x: x["instance_id"] in instance_ids, desc="filtering for instance_ids",)
     breakpoint()
     if "SWE-Llama" in model_name_or_path and dataset[0]["input_ids"][-2:] != [13, 13]:
         # SWE-Llama needs two exactly two newlines at the end
