@@ -171,6 +171,7 @@ def load_data(
     existing_ids,
     shard_id,
     num_shards,
+    instance_ids
 ):
     """
     Load and preprocess the dataset for model inference.
@@ -186,6 +187,7 @@ def load_data(
         existing_ids: The list of existing instance IDs to filter out from the dataset.
         shard_id (int): The ID of the shard to load.
         num_shards (int): The total number of shards.
+        instance_ids: The list of instance IDs to filter the dataset.
 
     Returns:
         dataset: The preprocessed dataset for model inference.
@@ -372,6 +374,7 @@ def main(
     max_len,
     shard_id,
     num_shards,
+    instance_ids,
 ):
     if shard_id is not None and num_shards is None:
         raise ValueError("num_shards must be specified with shard_id")
@@ -412,6 +415,7 @@ def main(
         existing_ids=existing_ids,
         shard_id=shard_id,
         num_shards=num_shards,
+        instance_ids=instance_ids,
     )
     with open(output_file, "a") as f:
         generate(
@@ -465,6 +469,12 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--num_shards", type=int, default=None, help="Total number of shards"
+    )
+    parser.add_argument(
+        "--instance_ids",
+        nargs="+",
+        type=str,
+        help="Instance IDs to run (space separated)",
     )
     args = parser.parse_args()
     main(**vars(args))
