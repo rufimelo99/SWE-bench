@@ -171,7 +171,9 @@ def load_data(
     existing_ids,
     shard_id,
     num_shards,
-    instance_ids
+    instance_ids,
+    max_instances,
+    instance_offset
 ):
     """
     Load and preprocess the dataset for model inference.
@@ -188,6 +190,8 @@ def load_data(
         shard_id (int): The ID of the shard to load.
         num_shards (int): The total number of shards.
         instance_ids: The list of instance IDs to filter the dataset.
+        max_instances (int): The maximum number of instances to process.
+        instance_offset (int): The offset for instance IDs.
 
     Returns:
         dataset: The preprocessed dataset for model inference.
@@ -229,6 +233,11 @@ def load_data(
         dataset = dataset.filter(
             lambda x: filter_func(len(x["input_ids"])), desc="filtering for length"
         )
+    if max_instances is not None:
+        dataset = dataset.select([i for i in list(range(max_instances)) if i < len(dataset)])
+    if instance_offset is not None:
+        dataset = dataset.select([i for i in list(range(instance_offset, len(dataset)))])
+
     lens = torch.tensor(list(map(lambda x: len(x["input_ids"]), dataset)))
     dataset = dataset.select(lens.argsort())
     if shard_id is not None and num_shards is not None:
@@ -375,6 +384,8 @@ def main(
     shard_id,
     num_shards,
     instance_ids,
+    max_instances,
+    instance_offset
 ):
     if shard_id is not None and num_shards is None:
         raise ValueError("num_shards must be specified with shard_id")
@@ -416,6 +427,8 @@ def main(
         shard_id=shard_id,
         num_shards=num_shards,
         instance_ids=instance_ids,
+        max_instances=max_instances,
+        instance_offset=instance_offset
     )
     with open(output_file, "a") as f:
         generate(
@@ -475,6 +488,18 @@ if __name__ == "__main__":
         nargs="+",
         type=str,
         help="Instance IDs to run (space separated)",
+    )
+    parser.add_argument(
+        "--max_instances",
+        type=int,
+        default=None,
+        help="Maximum number of instances to run",
+    )
+    parser.add_argument(
+        "--instance_offset",
+        type=int,
+        default=None,
+        help="Offset for instance IDs",
     )
     args = parser.parse_args()
     main(**vars(args))
